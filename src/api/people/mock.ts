@@ -1,4 +1,4 @@
-import type { IPeople } from "swapi-ts";
+import type { IPeople } from "@/types";
 
 export const mockPeople: IPeople[] = [
   {

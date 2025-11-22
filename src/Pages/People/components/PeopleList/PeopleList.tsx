@@ -1,5 +1,5 @@
 import { Card } from "@/components/Card/Card";
-import type { IPeople } from "swapi-ts";
+import type { IPeople } from "@/types";
 
 type Props = {
   data?: IPeople[];

@@ -1,5 +1,5 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
-import type { IPeople } from "swapi-ts";
+import type { IPeople } from "@/types";
 
 export type PeopleFormData = {
   name: IPeople["name"];

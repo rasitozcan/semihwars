@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import type { IPeople } from "swapi-ts";
+import type { IPeople } from "@/types";
+
 import { api } from "../api";
 
 const getPeople = async () => {
