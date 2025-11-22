@@ -15,6 +15,7 @@ export const Alert = ({ message, type = "error" }: Props) => {
         "alert-info": type === "info",
         "alert-success": type === "success",
       })}
+      data-testid="alert"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

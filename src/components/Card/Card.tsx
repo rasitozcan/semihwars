@@ -17,7 +17,7 @@ export const Card = ({ title, children, className, testId }: Props) => {
       <figure>
         <img
           src={`https://placehold.co/384x220?text=${encodedTitle}`}
-          alt="Shoes"
+          alt={title}
           className="w-full h-full object-cover"
         />
       </figure>

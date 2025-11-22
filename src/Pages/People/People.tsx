@@ -19,9 +19,9 @@ export const People = () => {
     console.log(data);
   };
   return (
-    <>
+    <div data-testid="people-container">
       <PeopleFilterForm onSubmit={handleFilter} />
       <PeopleList data={data} />
-    </>
+    </div>
   );
 };

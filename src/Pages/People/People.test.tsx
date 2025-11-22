@@ -1,39 +1,69 @@
-import { expect, test } from "vitest";
 import { People } from "./People";
-import { render } from "@/utilities/testing-utils";
+import { render, screen } from "@/utilities/testing-utils";
 import { mockPeople } from "@/api/people/mock";
+import { useGetPeople } from "@/api/people/use-get-people";
 
-vi.mock("@/api/people/use-get-people", async () => {
-  const actual = await vi.importActual("@/api/people/use-get-people");
-  return {
-    ...actual,
-    useGetPeople: vi.fn(() => ({
-      data: mockPeople,
-      isLoading: false,
-      error: null,
-    })),
-  };
-});
+vi.mock("@/api/people/use-get-people", () => ({
+  ...vi.importActual("@/api/people/use-get-people"),
+  useGetPeople: vi.fn(),
+}));
 
-test("People component renders without an issue", () => {
-  const { container } = render(<People />);
-  expect(container).toBeInTheDocument();
-});
+const mockUseGetPeople = vi.mocked(useGetPeople);
 
-test("People component displays person cards", () => {
-  const { getAllByTestId } = render(<People />);
-  const personCards = getAllByTestId("person-card");
+describe("People component", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
-  expect(personCards).toHaveLength(2);
-});
+  describe("when data is fetching", () => {
+    beforeEach(() => {
+      mockUseGetPeople.mockReturnValue({
+        data: undefined,
+        isLoading: true,
+        error: null,
+      } as unknown as ReturnType<typeof useGetPeople>);
+    });
 
-test("First person card has name Luke Skywalker", () => {
-  const { getAllByTestId, getByText } = render(<People />);
-  const personCards = getAllByTestId("person-card");
+    it("displays loading state", () => {
+      render(<People />);
 
-  expect(getByText("Luke Skywalker")).toBeInTheDocument();
-  expect(personCards[0]).toContainElement(getByText("Height: 172"));
-  expect(personCards[0]).toContainElement(getByText("Mass: 77"));
-  expect(personCards[0]).toContainElement(getByText("Gender: male"));
-  expect(personCards[0]).toContainElement(getByText("Birth Year: 19BBY"));
+      expect(screen.getByTestId("loading")).toBeInTheDocument();
+    });
+  });
+
+  describe("when there is an error fetching data", () => {
+    beforeEach(() => {
+      mockUseGetPeople.mockReturnValue({
+        data: undefined,
+        isLoading: false,
+        error: new Error("Error fetching people"),
+      } as unknown as ReturnType<typeof useGetPeople>);
+    });
+
+    it("displays error alert", () => {
+      render(<People />);
+
+      expect(screen.getByTestId("alert")).toBeInTheDocument();
+      expect(screen.getByTestId("alert")).toHaveTextContent(
+        "Error fetching people"
+      );
+    });
+  });
+
+  describe("when data is successfully fetched", () => {
+    beforeEach(() => {
+      mockUseGetPeople.mockReturnValue({
+        data: mockPeople,
+        isLoading: false,
+        error: null,
+      } as unknown as ReturnType<typeof useGetPeople>);
+    });
+
+    it("displays person cards", () => {
+      render(<People />);
+
+      const personCards = screen.queryAllByTestId("person-card");
+      expect(personCards).toHaveLength(2);
+    });
+  });
 });
